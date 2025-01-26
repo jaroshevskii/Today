@@ -13,10 +13,14 @@ extension ReminderListViewController {
     
     func cellRegistrationHandler(cell: UICollectionViewListCell, indexPath: IndexPath, id: String) {
         let reminder = Reminder.sampleData[indexPath.item]
+        
         var contentConfig = cell.defaultContentConfiguration()
         contentConfig.text = reminder.title
         contentConfig.secondaryText = reminder.dueDate.dateAndTimeText
         contentConfig.secondaryTextProperties.font = .preferredFont(forTextStyle: .caption1)
         cell.contentConfiguration = contentConfig
+        
+        var backgroundConfig = UIBackgroundConfiguration.listGroupedCell()
+        backgroundConfig.backgroundColor = .todayListCellBackground
     }
 }
