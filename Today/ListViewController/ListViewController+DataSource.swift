@@ -12,7 +12,7 @@ extension ReminderListViewController {
     typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Reminder.ID>
     
     func cellRegistrationHandler(cell: UICollectionViewListCell, indexPath: IndexPath, id: Reminder.ID) {
-        let reminder = reminders[indexPath.item]
+        let reminder = remider(withID: id)
         
         var contentConfig = cell.defaultContentConfiguration()
         contentConfig.text = reminder.title
@@ -29,6 +29,16 @@ extension ReminderListViewController {
         
         var backgroundConfig = UIBackgroundConfiguration.listGroupedCell()
         backgroundConfig.backgroundColor = .todayListCellBackground
+    }
+    
+    func remider(withID id: Reminder.ID) -> Reminder {
+        let index = reminders.indexOfReminder(withID: id)
+        return reminders[index]
+    }
+    
+    func updateReminder(_ reminder: Reminder) {
+        let index = reminders.indexOfReminder(withID: reminder.id)
+        reminders[index] = reminder
     }
     
     private func doneButtonConfiguration(for reminder: Reminder) -> UICellAccessory.CustomViewConfiguration {

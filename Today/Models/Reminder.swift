@@ -15,6 +15,16 @@ struct Reminder: Identifiable {
     var isComplete: Bool = false
 }
 
+extension [Reminder] {
+    func indexOfReminder(withID id: Reminder.ID) -> Index {
+        guard let index = firstIndex(where: { $0.id == id }) else {
+            fatalError("No reminder found with ID \(id)")
+        }
+        
+        return index
+    }
+}
+
 #if DEBUG
 extension Reminder {
     static var sampleData = [
