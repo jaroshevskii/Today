@@ -51,8 +51,10 @@ extension ReminderListViewController {
         let symbolName = reminder.isComplete ? "circle.fill" : "circle"
         let symbolConfig = UIImage.SymbolConfiguration(textStyle: .title1)
         let image = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
-        let button = UIButton()
+        let button = ReminderDoneButton()
         button.setImage(image, for: .normal)
+        button.addTarget(self, action: #selector(didPressDoneButton(_:)), for: .touchUpInside)
+        button.id = reminder.id
         return UICellAccessory.CustomViewConfiguration(customView: button, placement: .leading(displayed: .always))
     }
 }
