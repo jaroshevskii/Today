@@ -11,6 +11,14 @@ extension ReminderListViewController {
     typealias DataSource = UICollectionViewDiffableDataSource<Int, Reminder.ID>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Reminder.ID>
     
+    var remiderCompletedValue: String {
+        NSLocalizedString("Completed", comment: "Reminder completed value")
+    }
+    
+    var remiderNotCompletedValue: String {
+        NSLocalizedString("Not completed", comment: "Reminder not completed value")
+    }
+    
     func updateSnapshot(reloading ids: [Reminder.ID] = []) {
         var snapshot = Snapshot()
         snapshot.appendSections([0])
@@ -32,6 +40,8 @@ extension ReminderListViewController {
         
         var doneButtonConfig = doneButtonConfiguration(for: reminder)
         doneButtonConfig.tintColor = .todayListCellDoneButtonTint
+        cell.accessibilityCustomActions = [doneButtonAccessibilityAction(for: reminder)]
+        cell.accessibilityValue = reminder.isComplete ? remiderCompletedValue : remiderNotCompletedValue
         cell.accessories = [
             .customView(configuration: doneButtonConfig),
             .disclosureIndicator(displayed: .always),
@@ -56,6 +66,15 @@ extension ReminderListViewController {
         reminder.isComplete.toggle()
         updateReminder(reminder)
         updateSnapshot(reloading: [id])
+    }
+    
+    private func doneButtonAccessibilityAction(for reminder: Reminder) -> UIAccessibilityCustomAction {
+        let name = NSLocalizedString("Toggle completion", comment: "Reminder done button accesssibility label")
+        let action = UIAccessibilityCustomAction(name: name) { [weak self] action in
+            self?.completeReminder(withID: reminder.id)
+            return true
+        }
+        return action
     }
     
     private func doneButtonConfiguration(for reminder: Reminder) -> UICellAccessory.CustomViewConfiguration {
