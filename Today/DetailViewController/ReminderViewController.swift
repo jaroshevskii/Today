@@ -38,15 +38,22 @@ class ReminderViewController: UICollectionViewController {
         navigationItem.style = .navigator
         navigationItem.title = NSLocalizedString("Reminder", comment: "Reminder view controller title")
         
-        updateSnapshot()
+        updateSnapshotForViewing()
     }
     
-    func cellRegistrationHeandler(cell: UICollectionViewListCell, indexPaht: IndexPath, row: Row) {
-        var contentConfig = cell.defaultContentConfiguration()
-        contentConfig.text = text(for: row)
-        contentConfig.textProperties.font = .preferredFont(forTextStyle: row.textStyle)
-        contentConfig.image = row.image
-        cell.contentConfiguration = contentConfig
+    func cellRegistrationHeandler(cell: UICollectionViewListCell, indexPath: IndexPath, row: Row) {
+        let section = section(for: indexPath)
+        switch (section, row) {
+        case (.view, _):
+            var contentConfig = cell.defaultContentConfiguration()
+            contentConfig.text = text(for: row)
+            contentConfig.textProperties.font = .preferredFont(forTextStyle: row.textStyle)
+            contentConfig.image = row.image
+            cell.contentConfiguration = contentConfig
+        default:
+            fatalError("Unexpected combination of section and row.")
+        }
+
         cell.tintColor = .todayPrimaryTint
     }
     
@@ -59,7 +66,13 @@ class ReminderViewController: UICollectionViewController {
         }
     }
     
-    private func updateSnapshot() {
+    private func updateSnapshotForEditing() {
+        var snapshot = Snapshot()
+        snapshot.appendSections([.title, .date, .notes])
+        dataSource?.apply(snapshot)
+    }
+    
+    private func updateSnapshotForViewing() {
         var snapshot = Snapshot()
         snapshot.appendSections([.view])
         snapshot.appendItems([Row.title, Row.date, Row.time, Row.notes], toSection: .view)
